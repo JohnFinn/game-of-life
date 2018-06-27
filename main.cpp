@@ -19,6 +19,7 @@ int main(){
     }
 
     gl::Buffer buff;
+    gl::Program prog = gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 
     while (not window.should_close()){
         glfwPollEvents();
