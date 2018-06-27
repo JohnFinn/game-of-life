@@ -1,19 +1,31 @@
 #include "GameOfLife.h"
+#include "guilib/libgui.h"
 #include <iostream>
 
-int main(){
-    GameOfLife game(20,10);
-        for (int x = 0; x < 20; ++x)
-            for (int y = 0; y < 10; ++y)
-                game.cell_current(x,y) = std::rand()%2;
 
-    for (int i = 0; i <= 10; ++i){
-        for (int y = 0; y < 10; ++y) {
-            for (int x = 0; x < 20; ++x)
-                std::cout << static_cast<bool>(game.cell_current(x,y));
-            std::cout << '\n';
-        }
-        game.step();
-        std::cout << '\n';
+int main(){
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize library\n";
+        return -1;
     }
+    glfwSetErrorCallback(error_callback);
+
+    gui::Window window(800,600,"game of life");
+    window.use();
+
+    if (GLenum err = glewInit()){
+        std::cerr << "Failed to initialize GLEW\n" << err;
+        return err;
+    }
+
+
+    while (not window.should_close()){
+        glfwPollEvents();
+        window.swap_buffers();
+    }
+
+
+
+    glfwTerminate();
+    return 0;
 }
