@@ -1,5 +1,7 @@
 #version 120
 
-void main() {
+out vec4 color;
 
+void main() {
+    color = vec4(0,1,0,1);
 }

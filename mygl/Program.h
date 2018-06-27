@@ -18,7 +18,6 @@ namespace gl {
 
         static Program fromFiles(const std::string &vertFname, const std::string &fragFname);
 
-
         Program(Shader &&vs, Shader &&fs);
 
         ~Program();
