@@ -13,4 +13,9 @@ namespace gl {
     void Buffer::bind(GLenum target) {
         GLCALL(glBindBuffer(target, id);)
     }
+
+    void Buffer::copy(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) {
+        bind(target);
+        GLCALL(glBufferData(target, size, data, usage);)
+    }
 } // namespace gl

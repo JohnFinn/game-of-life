@@ -13,6 +13,11 @@ namespace gl {
         ~Buffer();
 
         void bind(GLenum target);
+
+        void copy(GLenum target,
+                  GLsizeiptr size,
+                  const GLvoid * data,
+                  GLenum usage);
     };
 
 }
