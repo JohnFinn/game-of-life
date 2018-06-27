@@ -2,8 +2,7 @@
 
 #include <stdexcept>
 
-namespace gui {
-
+namespace gl {
     Window::Window(int w, int h, char *title, GLFWmonitor *monitor, GLFWwindow *share) :
             window(glfwCreateWindow(w, h, title, monitor, share)) {
         if (not window)
@@ -30,5 +29,4 @@ namespace gui {
     void Window::swap_buffers() {
         glfwSwapBuffers(window);
     }
-
-} // namespace gui
+} // namespace gl

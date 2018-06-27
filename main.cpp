@@ -1,5 +1,5 @@
 #include "GameOfLife.h"
-#include "guilib/libgui.h"
+#include "mygl/mygl.h"
 #include <iostream>
 
 
@@ -10,7 +10,7 @@ int main(){
     }
     glfwSetErrorCallback(error_callback);
 
-    gui::Window window(800,600,"game of life");
+    gl::Window window(800,600,"game of life");
     window.use();
 
     if (GLenum err = glewInit()){
@@ -18,6 +18,7 @@ int main(){
         return err;
     }
 
+    gl::Buffer buff;
 
     while (not window.should_close()){
         glfwPollEvents();
