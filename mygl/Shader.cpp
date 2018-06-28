@@ -21,7 +21,6 @@ namespace gl {
         int result = get_iv(GL_COMPILE_STATUS);
         if (result == GL_FALSE) {
             int length = get_iv(GL_INFO_LOG_LENGTH);
-            GLCALL(glDeleteShader(id);)
             throw std::runtime_error("Failed to compile shader " + getInfoLog(length));
         }
     }
@@ -37,6 +36,16 @@ namespace gl {
         result.resize(length);
         GLCALL(glGetShaderInfoLog(id, length, &length, (char *) result.c_str());)
         return result;
+    }
+
+    Shader::Shader(Shader &&other) : id(other.id) {
+        other.id = 0;
+    }
+
+    Shader &Shader::operator=(Shader &&other) {
+        id = other.id;
+        other.id = 0;
+        return *this;
     }
 
 } // namespace gl

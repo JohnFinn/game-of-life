@@ -20,6 +20,10 @@ namespace gl {
 
         Program(Shader &&vs, Shader &&fs);
 
+        Program(Program&& other) noexcept ;
+
+        Program& operator=(Program&& other) noexcept;
+
         ~Program();
 
         void bind() const;

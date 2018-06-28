@@ -13,6 +13,10 @@ namespace gl {
     public:
         Shader(GLenum type, const char *source);
 
+        Shader(Shader&& other);
+
+        Shader& operator=(Shader&& other);
+
         explicit Shader(GLenum type);
 
         ~Shader();

@@ -37,4 +37,17 @@ namespace gl {
 
     void Program::validate() const  { GLCALL(glValidateProgram(id);)}
 
+    Program::Program(Program &&other) noexcept :
+            id(other.id), vertexShader(std::move(other.vertexShader)), fragmentShader(std::move(other.fragmentShader)) {
+        other.id = 0;
+    }
+
+    Program &Program::operator=(Program &&other) noexcept {
+        id = other.id;
+        other.id = 0;
+        vertexShader = std::move(other.vertexShader);
+        fragmentShader = std::move(other.fragmentShader);
+        return *this;
+    }
+
 } // namespace gl
