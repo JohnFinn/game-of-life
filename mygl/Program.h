@@ -25,7 +25,7 @@ namespace gl {
 
         ~Program();
 
-        void bind() const;
+        void use() const;
 
         void attach(Shader &shader);
 

@@ -37,7 +37,7 @@ namespace gl {
     }
 
 
-    void Program::bind() const {
+    void Program::use() const {
         GLCALL(glUseProgram(id);)
     }
 
