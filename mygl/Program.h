@@ -11,8 +11,7 @@
 namespace gl {
 
     class Program {
-        Shader vertexShader, fragmentShader;
-        unsigned int id;
+        GLuint id;
     public:
         static Program fromString(const char* vert, const char* frag);
 
@@ -33,6 +32,8 @@ namespace gl {
         void link();
 
         void validate() const;
+
+        GLint get_iv(GLenum pname);
     };
 
 } // namespace gl

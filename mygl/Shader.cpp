@@ -18,31 +18,29 @@ namespace gl {
 
     void Shader::compile() {
         GLCALL(glCompileShader(id);)
-        int result = get_iv(GL_COMPILE_STATUS);
-        if (result == GL_FALSE) {
-            int length = get_iv(GL_INFO_LOG_LENGTH);
-            throw std::runtime_error("Failed to compile shader " + getInfoLog(length));
-        }
+        if (get_iv(GL_COMPILE_STATUS) == GL_FALSE)
+            throw std::runtime_error("Failed to compile shader " + getInfoLog());
     }
 
-    inline int Shader::get_iv(GLenum pname) {
-        int result;
+    GLint Shader::get_iv(GLenum pname) {
+        GLint result;
         GLCALL(glGetShaderiv(id, pname, &result);)
         return result;
     }
 
-    std::string Shader::getInfoLog(int length) {
+    std::string Shader::getInfoLog() {
+        int length = get_iv(GL_INFO_LOG_LENGTH);
         std::string result;
         result.resize(length);
         GLCALL(glGetShaderInfoLog(id, length, &length, (char *) result.c_str());)
         return result;
     }
 
-    Shader::Shader(Shader &&other) : id(other.id) {
+    Shader::Shader(Shader &&other) noexcept : id(other.id) {
         other.id = 0;
     }
 
-    Shader &Shader::operator=(Shader &&other) {
+    Shader &Shader::operator=(Shader &&other) noexcept {
         id = other.id;
         other.id = 0;
         return *this;

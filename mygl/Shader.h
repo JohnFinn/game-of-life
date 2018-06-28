@@ -9,13 +9,13 @@ namespace gl {
     class Shader {
         friend class Program;
 
-        unsigned int id;
+        GLuint id;
     public:
         Shader(GLenum type, const char *source);
 
-        Shader(Shader&& other);
+        Shader(Shader&& other) noexcept;
 
-        Shader& operator=(Shader&& other);
+        Shader& operator=(Shader&& other) noexcept;
 
         explicit Shader(GLenum type);
 
@@ -25,9 +25,9 @@ namespace gl {
 
         void compile();
 
-        int get_iv(GLenum pname);
+        GLint get_iv(GLenum pname);
 
-        std::string getInfoLog(int length);
+        std::string getInfoLog();
     };
 } //namespace gl
 

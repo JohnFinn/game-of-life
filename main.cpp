@@ -28,14 +28,16 @@ int main(){
     gl::Buffer buff;
     verar.bind();
     buff.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    buff.bind(GL_ARRAY_BUFFER);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)nullptr);
     glEnableVertexAttribArray(0);
 
     gl::Program prog = gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl");
     prog.bind();
 
+    glPointSize(99);
     while (not window.should_close()){
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_POINTS, 0, 3);
         glfwPollEvents();
         window.swap_buffers();
     }
