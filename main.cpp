@@ -5,23 +5,11 @@
 
 
 int main(){
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize library\n";
-        return -1;
-    }
-//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwSetErrorCallback(error_callback);
+    gl::Library lib;
 
     char title[] = "game of life";
     gl::Window window(1000,600,title);
     window.use();
-
-    if (GLenum err = glewInit()){
-        std::cerr << "Failed to initialize GLEW\n" << err;
-        return err;
-    }
-
-
 
     const auto&& [width, height] = window.get_size();
     glViewport(0, 0, width, height); // TODO find out what is it for
@@ -68,7 +56,5 @@ int main(){
     }
 
 
-
-    glfwTerminate();
     return 0;
 }

@@ -14,14 +14,16 @@ namespace gl {
 
         ~Window();
 
-        void use();
+        void use() const;
 
-        int should_close();
+        int should_close() const;
 
         void swap_buffers();
 
         void get_size(int& height, int& width) const noexcept;
 
         std::pair<int, int> get_size() const noexcept; // width, height
+
+        void set_point_size(GLfloat size);
     };
 }

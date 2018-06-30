@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 namespace gl {
+
     Window::Window(int w, int h, char *title, GLFWmonitor *monitor, GLFWwindow *share) :
             window(glfwCreateWindow(w, h, title, monitor, share)) {
         if (not window)
@@ -10,18 +11,20 @@ namespace gl {
     }
 
 
-    Window::Window(int w, int h, char *title) : Window(w, h, title, NULL, NULL) {}
+    Window::Window(int w, int h, char *title) : Window(w, h, title, nullptr, nullptr) {}
 
 
     Window::~Window() { glfwDestroyWindow(window); }
 
 
-    void Window::use() {
+    void Window::use() const {
         glfwMakeContextCurrent(window);
+        if (GLenum err = glewInit())
+            throw std::runtime_error("Failed to initialize GLEW " + std::to_string(err));
     }
 
 
-    int Window::should_close() {
+    int Window::should_close() const {
         return glfwWindowShouldClose(window);
     }
 
@@ -40,5 +43,11 @@ namespace gl {
 
     void Window::get_size(int& width, int& height) const noexcept {
         glfwGetWindowSize(window , &width, &height);
+    }
+
+
+    void Window::set_point_size(GLfloat size) {
+        use();
+        glPointSize(size);
     }
 } // namespace gl
