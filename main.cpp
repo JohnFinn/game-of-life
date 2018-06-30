@@ -19,6 +19,9 @@ int main(){
         return err;
     }
 
+    auto&& [width, height] = window.get_size();
+    std::cout << height << ' ' << width << '\n';
+
     GLfloat vertices[] = {
             -1.0f, -1.0f,
             1.0f, -1.0f,

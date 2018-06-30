@@ -29,4 +29,16 @@ namespace gl {
     void Window::swap_buffers() {
         glfwSwapBuffers(window);
     }
+
+
+    std::pair<int, int> Window::get_size() const noexcept{
+        int width, height;
+        get_size(width, height);
+        return {width, height};
+    }
+
+
+    void Window::get_size(int& width, int& height) const noexcept {
+        glfwGetWindowSize(window , &width, &height);
+    }
 } // namespace gl

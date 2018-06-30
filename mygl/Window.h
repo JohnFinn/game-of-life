@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <utility>
 
 namespace gl {
     class Window {
@@ -18,5 +19,9 @@ namespace gl {
         int should_close();
 
         void swap_buffers();
+
+        void get_size(int& height, int& width) const noexcept;
+
+        std::pair<int, int> get_size() const noexcept; // width, height
     };
 }
