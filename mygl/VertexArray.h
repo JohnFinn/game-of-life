@@ -30,5 +30,7 @@ namespace gl {
         void set_layout(GLenum target, std::vector<BufferElement> layout);
 
         void copy(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
+
+        void draw(GLenum mode,  GLint first,  GLsizei count);
     };
 } // namespace gl

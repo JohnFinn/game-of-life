@@ -11,13 +11,15 @@ public:
 
     void step();
 
-    GameOfLife(unsigned int height, unsigned int width);
+    GameOfLife(unsigned int width, unsigned int height);
 
-    uint8_t& cell_current(unsigned int x, unsigned int y);
+    uint8_t& cell(unsigned int x, unsigned int y);
 
     uint8_t& cell_next(unsigned int x, unsigned int y);
 
     void update_cell(unsigned int x, unsigned int y);
 
     uint8_t count_around(unsigned int x, unsigned int y);
+
+    void randomize();
 };

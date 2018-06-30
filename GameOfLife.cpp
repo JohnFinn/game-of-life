@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "GameOfLife.h"
 
 
@@ -8,12 +9,13 @@ void GameOfLife::step(){
     std::swap(world, next);
 }
 
-GameOfLife::GameOfLife(unsigned int height, unsigned int width) : height(height), width(width), world(height * width), next(height * width)
+GameOfLife::GameOfLife(unsigned int width, unsigned int height)
+        : height(height), width(width), world(height * width), next(height * width)
 {}
 
 
 
-uint8_t& GameOfLife::cell_current(unsigned int x, unsigned int y){
+uint8_t& GameOfLife::cell(unsigned int x, unsigned int y){
     return world.at(x+y*width);
 }
 
@@ -25,7 +27,7 @@ uint8_t& GameOfLife::cell_next(unsigned int x, unsigned int y){
 
 void GameOfLife::update_cell(unsigned int x, unsigned int y){
     uint8_t count = count_around(x, y);
-    bool alive = cell_current(x,y);
+    bool alive = cell(x, y);
     cell_next(x, y) = static_cast<uint8_t>((not alive and count == 3) or ((alive and count == 3) or count == 4));
 }
 
@@ -38,8 +40,14 @@ uint8_t GameOfLife::count_around(unsigned int x, unsigned int y){
 
     uint8_t result = 0;
 
-    for (int X = X1; X <= X2; ++X)
-        for (int Y = Y1; Y <= Y2; ++Y)
-            result += cell_current(X, Y);
+    for (uint X = X1; X <= X2; ++X)
+        for (uint Y = Y1; Y <= Y2; ++Y)
+            result += cell(X, Y);
     return result;
+}
+
+
+void GameOfLife::randomize(){
+    for (auto& cell : world)
+        cell = std::rand() % 2;
 }
