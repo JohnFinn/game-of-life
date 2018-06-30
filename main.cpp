@@ -2,59 +2,76 @@
 #include "mygl/mygl.h"
 #include <iostream>
 #include <cstring>
+#include <unistd.h>
+
+template <unsigned int wcount = 80, unsigned int hcount = 60>
+class Game{
+public:
+    // order is important !
+    gl::Library lib;        // has to be first (calls glwfinit in constructor and glfwterminate in destructor)
+    gl::Window window;      // calls glewinit and also I need to be able to call window.use() before constructing vao and program
+    GameOfLife game;        // use comma operator to call window.use()
+    gl::VertexArray vao;    // needs opengl context which window.use() does
+    gl::Program program;    // same as vao
+
+    GLfloat vertices[hcount][wcount][3];
+
+
+    Game() : Game(10) {}
+
+
+    explicit Game(unsigned int cell_size) :
+            window(cell_size * wcount, cell_size * hcount, "Game of life"),
+            game(wcount, (window.use(), hcount)),
+            program(gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl"))
+    {
+
+        // glider
+//        int x = 10, y = 50;
+//        game.cell(x, y) = 1;
+//        game.cell(x+1,y) = 1;
+//        game.cell(x+2,y) = 1;
+//        game.cell(x+2,y+1) = 1;
+//        game.cell(x+1,y+2) = 1;
+        game.diagonals();
+//        game.randomize();
+        GLfloat relative_x_cell_size = 2.0f/wcount,
+                relative_y_cell_size = 2.0f/hcount;
+
+        GLfloat x_start = relative_x_cell_size/2 - 1,
+                y_start = relative_y_cell_size/2 - 1;
+
+        for (uint y = 0; y < hcount; ++y) {
+            for (uint x = 0; x < wcount; ++x) {
+                vertices[y][x][0] = x_start + x * relative_x_cell_size;
+                vertices[y][x][1] = y_start + y * relative_y_cell_size;
+                vertices[y][x][2] = static_cast <float> (game.cell(x, y));
+            }
+        }
+        vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+        vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
+        program.use();
+        glPointSize(cell_size*0.5); // TODO make window do it
+    }
+
+    void play(){
+        while (not window.should_close()){
+            vao.draw(GL_POINTS, 0, hcount * wcount);
+            glfwPollEvents(); // TODO incapsulate it in gl::Window
+            window.swap_buffers();
+            game.step();
+            for (uint y = 0; y < hcount; ++y)
+                for (uint x = 0; x < wcount; ++x)
+                    vertices[y][x][2] = static_cast <float> (game.cell(x, y));
+            vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+//            sleep(1);
+        }
+    }
+};
 
 
 int main(){
-    gl::Library lib;
-
-    char title[] = "game of life";
-    gl::Window window(1000,600,title);
-    window.use();
-
-    const auto&& [width, height] = window.get_size();
-    glViewport(0, 0, width, height); // TODO find out what is it for
-
-    const int cell_size = 1;
-
-    float relative_x_cell_size = static_cast<float>(cell_size*2) / width;
-    float relative_y_cell_size = static_cast<float>(cell_size*2) / height;
-
-    GLfloat vertices[height/cell_size][width/cell_size][3];
-    GameOfLife game(static_cast<uint>(width/cell_size), static_cast<uint>(height/cell_size));
-    game.randomize();
-
-    for (uint y = 0; y < height / cell_size; ++y) {
-        for (uint x = 0; x < width / cell_size; ++x) {
-            vertices[y][x][0] = -1.0f + x * relative_x_cell_size + relative_x_cell_size/2;
-            vertices[y][x][1] = -1.0f + y * relative_y_cell_size + relative_y_cell_size/2;
-            vertices[y][x][2] = static_cast <float> (game.cell(x, y));
-        }
-    }
-
-
-
-    gl::VertexArray verar;
-    verar.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-    verar.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
-
-    gl::Program prog = gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl");
-    prog.use();
-
-    verar.bind();
-    glPointSize(cell_size);
-    while (not window.should_close()){
-        verar.draw(GL_POINTS, 0, height/cell_size * width/cell_size);
-        glfwPollEvents();
-        window.swap_buffers();
-//        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-//        glClear(GL_COLOR_BUFFER_BIT);
-        game.step();
-        for (uint y = 0; y < height / cell_size; ++y)
-            for (uint x = 0; x < width / cell_size; ++x)
-                vertices[y][x][2] = static_cast <float> (game.cell(x, y));
-        verar.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-    }
-
-
+    Game<100, 80> g(10);
+    g.play();
     return 0;
 }

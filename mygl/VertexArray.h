@@ -31,6 +31,6 @@ namespace gl {
 
         void copy(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
 
-        void draw(GLenum mode,  GLint first,  GLsizei count);
+        void draw(GLenum mode,  GLint first,  GLsizei count) const;
     };
 } // namespace gl

@@ -8,9 +8,9 @@ namespace gl {
     class Window {
         GLFWwindow *window = nullptr;
     public:
-        Window(int w, int h, char *title, GLFWmonitor *monitor, GLFWwindow *share);
+        Window(unsigned int w, unsigned int h, char *title, GLFWmonitor *monitor, GLFWwindow *share);
 
-        Window(int w, int h, char *title);
+        Window(unsigned int w, unsigned int h, char *title);
 
         ~Window();
 

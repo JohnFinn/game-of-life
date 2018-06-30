@@ -26,6 +26,7 @@ namespace gl {
             glfwSetErrorCallback(gl::error_callback);
         }
 
+
         ~Library(){
             glfwTerminate();
             glfwSetErrorCallback(nullptr);

@@ -22,13 +22,13 @@ namespace gl {
             throw std::runtime_error("Failed to compile shader " + getInfoLog());
     }
 
-    GLint Shader::get_iv(GLenum pname) {
+    GLint Shader::get_iv(GLenum pname) const {
         GLint result;
         GLCALL(glGetShaderiv(id, pname, &result);)
         return result;
     }
 
-    std::string Shader::getInfoLog() {
+    std::string Shader::getInfoLog() const {
         int length = get_iv(GL_INFO_LOG_LENGTH);
         std::string result;
         result.resize(length);

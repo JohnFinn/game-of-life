@@ -25,9 +25,9 @@ namespace gl {
 
         void compile();
 
-        GLint get_iv(GLenum pname);
+        GLint get_iv(GLenum pname) const;
 
-        std::string getInfoLog();
+        std::string getInfoLog() const;
     };
 } //namespace gl
 

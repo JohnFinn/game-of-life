@@ -12,7 +12,7 @@ namespace gl {
 
         ~Buffer();
 
-        void bind(GLenum target);
+        void bind(GLenum target) const;
 
         void copy(GLenum target,
                   GLsizeiptr size,

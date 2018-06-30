@@ -54,7 +54,7 @@ namespace gl{
     }
 
 
-    void VertexArray::draw(GLenum mode, GLint first, GLsizei count) {
+    void VertexArray::draw(GLenum mode, GLint first, GLsizei count) const {
         bind();
         GLCALL(glDrawArrays(mode, first, count);)
         GLCALL(glBindVertexArray(0);)

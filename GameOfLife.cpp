@@ -28,7 +28,7 @@ uint8_t& GameOfLife::cell_next(unsigned int x, unsigned int y){
 void GameOfLife::update_cell(unsigned int x, unsigned int y){
     uint8_t count = count_around(x, y);
     bool alive = cell(x, y);
-    cell_next(x, y) = static_cast<uint8_t>((not alive and count == 3) or ((alive and count == 3) or count == 4));
+    cell_next(x, y) = static_cast<uint8_t>((not alive and count == 3) or (alive and (count == 3 or count == 4)));
 }
 
 
@@ -50,4 +50,12 @@ uint8_t GameOfLife::count_around(unsigned int x, unsigned int y){
 void GameOfLife::randomize(){
     for (auto& cell : world)
         cell = std::rand() % 2;
+}
+
+void GameOfLife::diagonals() {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            cell(x, y) = x % 2 xor y % 2;
+        }
+    }
 }

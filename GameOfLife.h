@@ -22,4 +22,6 @@ public:
     uint8_t count_around(unsigned int x, unsigned int y);
 
     void randomize();
+
+    void diagonals();
 };
