@@ -33,8 +33,8 @@ public:
 //        game.cell(x+2,y) = 1;
 //        game.cell(x+2,y+1) = 1;
 //        game.cell(x+1,y+2) = 1;
-        game.bars();
-//        game.randomize();
+//        game.bars();
+        game.randomize();
         GLfloat relative_x_cell_size = 2.0f/wcount,
                 relative_y_cell_size = 2.0f/hcount;
 
@@ -52,19 +52,39 @@ public:
         vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
         program.use();
         glPointSize(cell_size); // TODO make window do it
+
+
     }
 
+
+    void step(){
+        vao.draw(GL_POINTS, 0, hcount * wcount);
+        glfwPollEvents(); // TODO incapsulate it in gl::Window
+        window.swap_buffers();
+        game.step();
+        for (unsigned int y = 0; y < hcount; ++y)
+            for (unsigned int x = 0; x < wcount; ++x)
+                vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
+        vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+    }
+
+
     void play(){
+        bool running = false;
+        window.SetKeyCallback([&](GLFWwindow *window, int key, int scancode, int action, int mods){
+//            std::cout << window << ' ' << key << ' ' << scancode << ' ' << action << ' ' << mods << std::endl;
+            if (key == GLFW_KEY_SPACE and action == GLFW_PRESS)
+                running = not running;
+            else if (key == GLFW_KEY_N and action == GLFW_PRESS or action == GLFW_REPEAT)
+                step();
+        });
         while (not window.should_close()){
-            vao.draw(GL_POINTS, 0, hcount * wcount);
-            glfwPollEvents(); // TODO incapsulate it in gl::Window
-            window.swap_buffers();
-            game.step();
-            for (uint y = 0; y < hcount; ++y)
-                for (uint x = 0; x < wcount; ++x)
-                    vertices[y][x][2] = static_cast <float> (game.cell(x, y));
-            vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-            sleep(1);
+            if (running)
+                step();
+            else{
+                glfwPollEvents();
+            }
+//            sleep(1);
         }
     }
 };
