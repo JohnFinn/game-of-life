@@ -32,10 +32,12 @@ public:
         glider(20, 50);
         glider(20, 40);
 
-
+        // cells should be displayed as squares
+        // here we calculate height and width in interval -1, 1 in order not to allow overlapping
         GLfloat relative_x_cell_size = 2.0f/wcount,
                 relative_y_cell_size = 2.0f/hcount;
 
+        // position of the first cell
         GLfloat x_start = relative_x_cell_size/2 - 1,
                 y_start = relative_y_cell_size/2 - 1;
 
@@ -49,9 +51,7 @@ public:
         vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
         vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
         program.use();
-        glPointSize(cell_size); // TODO make window do it
-
-
+        window.set_point_size(cell_size);
     }
 
 
