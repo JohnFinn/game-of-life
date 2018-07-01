@@ -8,7 +8,12 @@ namespace gl {
 
 
     void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods){
-        Window::windows[window]->keyfunc(window, key, scancode, action, mods);
+        Window::get(window)->keyfunc(key, scancode, action, mods);
+    }
+
+
+    void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+        Window::get(window)->mouse_button_func(button, action, mods);
     }
 
 
@@ -18,6 +23,7 @@ namespace gl {
             throw std::runtime_error("Window or context creation failed");
         windows[window] = this;
         SetKeyCallback(keyCallback);
+        SetMouseButtonCallback(mouse_button_callback);
     }
 
 
@@ -65,14 +71,23 @@ namespace gl {
     }
 
 
-    GLFWkeyfun Window::SetKeyCallback(GLFWkeyfun cbfun) {
-        return glfwSetKeyCallback(window, cbfun);
+    GLFWkeyfun Window::SetKeyCallback(GLFWkeyfun callback) {
+        return glfwSetKeyCallback(window, callback);
     }
 
 
-    void Window::SetKeyCallback(Window::keyfunc_t func) {
-        keyfunc = std::move(func);
+    void Window::SetKeyCallback(Window::keyfunc_t callback) {
+        keyfunc = std::move(callback);
     }
 
+
+    Window *Window::get(GLFWwindow *window) {
+        return Window::windows[window];
+    }
+
+
+    GLFWmousebuttonfun Window::SetMouseButtonCallback(GLFWmousebuttonfun callback) {
+        return glfwSetMouseButtonCallback(window, callback);
+    }
 
 } // namespace gl

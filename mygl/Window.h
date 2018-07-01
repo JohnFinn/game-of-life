@@ -9,17 +9,24 @@
 namespace gl {
 
     class Window {
-        friend void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+    private:
+
+
+        typedef std::function<void(int, int, int, int)> keyfunc_t;
+        typedef std::function<void(int, int, int)> mouse_button_func_t;
 
         GLFWwindow *window = nullptr;
 
-        typedef std::function<void(GLFWwindow *, int, int, int, int)> keyfunc_t;
-
         static std::map<GLFWwindow*, Window*> windows;
+
+    public:
 
         keyfunc_t keyfunc;
 
-    public:
+        mouse_button_func_t mouse_button_func;
+
+        static Window* get(GLFWwindow* window);
+
         Window(unsigned int w, unsigned int h, char *title, GLFWmonitor *monitor, GLFWwindow *share);
 
         Window(unsigned int w, unsigned int h, char *title);
@@ -38,8 +45,12 @@ namespace gl {
 
         void set_point_size(GLfloat size);
 
-        GLFWkeyfun SetKeyCallback(GLFWkeyfun cbfun);
+        GLFWkeyfun SetKeyCallback(GLFWkeyfun callback);
 
-        void SetKeyCallback(keyfunc_t func);
+        void SetKeyCallback(keyfunc_t callback);
+
+        GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun callback);
+
+        void SetMouseButtonCallback(mouse_button_func_t callback);
     };
 }

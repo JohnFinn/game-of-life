@@ -26,4 +26,5 @@ public:
     void diagonals();
 
     void bars();
+
 };

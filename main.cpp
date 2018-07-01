@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
+#include <unitypes.h>
 
 template <unsigned int wcount = 80, unsigned int hcount = 60>
 class Game{
@@ -27,14 +28,13 @@ public:
     {
 
         // glider
-//        int x = 10, y = 50;
-//        game.cell(x, y) = 1;
-//        game.cell(x+1,y) = 1;
-//        game.cell(x+2,y) = 1;
-//        game.cell(x+2,y+1) = 1;
-//        game.cell(x+1,y+2) = 1;
-//        game.bars();
-        game.randomize();
+        int x = 10, y = 50;
+        game.cell(x, y) = 1;
+        game.cell(x+1,y) = 1;
+        game.cell(x+2,y) = 1;
+        game.cell(x+2,y+1) = 1;
+        game.cell(x+1,y+2) = 1;
+
         GLfloat relative_x_cell_size = 2.0f/wcount,
                 relative_y_cell_size = 2.0f/hcount;
 
@@ -71,27 +71,48 @@ public:
 
     void play(){
         bool running = false;
-        window.SetKeyCallback([&](GLFWwindow *window, int key, int scancode, int action, int mods){
+        window.SetKeyCallback([&](int key, int scancode, int action, int mods){
 //            std::cout << window << ' ' << key << ' ' << scancode << ' ' << action << ' ' << mods << std::endl;
             if (key == GLFW_KEY_SPACE and action == GLFW_PRESS)
                 running = not running;
             else if (key == GLFW_KEY_N and action == GLFW_PRESS or action == GLFW_REPEAT)
                 step();
         });
+//        window.S
         while (not window.should_close()){
             if (running)
                 step();
-            else{
+            else
                 glfwPollEvents();
-            }
 //            sleep(1);
         }
+    }
+
+    void randomize(){
+        for (unsigned int y = 0; y < hcount; ++y)
+            for (unsigned int x = 0; x < wcount; ++x)
+                game.cell(x, y) = static_cast<uint8_t>(std::rand() % 2);
+    }
+
+
+    void diagonals() {
+        for (unsigned int y = 0; y < hcount; ++y)
+            for (unsigned int x = 0; x < wcount; ++x)
+                game.cell(x, y) = static_cast<uint8_t>(x % 2 xor y % 2);
+    }
+
+
+    void bars() {
+        for (unsigned int y = 0; y < hcount; ++y)
+            for (unsigned int x = 0; x < wcount; ++x)
+                game.cell(x, y) = static_cast<uint8_t>(x % 2 or y % 2);
     }
 };
 
 
 int main(){
-    Game<100, 80> g(10);
-    g.play();
+        Game<100, 80> g(10);
+        g.play();
+
     return 0;
 }

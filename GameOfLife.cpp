@@ -45,26 +45,3 @@ uint8_t GameOfLife::count_around(unsigned int x, unsigned int y){
             result += cell(X, Y);
     return result;
 }
-
-
-void GameOfLife::randomize(){
-    for (auto& cell : world)
-        cell = std::rand() % 2;
-}
-
-void GameOfLife::diagonals() {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            cell(x, y) = x % 2 xor y % 2;
-        }
-    }
-}
-
-
-void GameOfLife::bars() {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            cell(x, y) = x % 2 or y % 2;
-        }
-    }
-}
