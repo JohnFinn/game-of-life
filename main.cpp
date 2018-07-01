@@ -33,7 +33,7 @@ public:
 //        game.cell(x+2,y) = 1;
 //        game.cell(x+2,y+1) = 1;
 //        game.cell(x+1,y+2) = 1;
-        game.diagonals();
+        game.bars();
 //        game.randomize();
         GLfloat relative_x_cell_size = 2.0f/wcount,
                 relative_y_cell_size = 2.0f/hcount;
@@ -51,7 +51,7 @@ public:
         vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
         vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
         program.use();
-        glPointSize(cell_size*0.5); // TODO make window do it
+        glPointSize(cell_size); // TODO make window do it
     }
 
     void play(){
@@ -64,7 +64,7 @@ public:
                 for (uint x = 0; x < wcount; ++x)
                     vertices[y][x][2] = static_cast <float> (game.cell(x, y));
             vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-//            sleep(1);
+            sleep(1);
         }
     }
 };

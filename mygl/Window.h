@@ -25,5 +25,7 @@ namespace gl {
         std::pair<int, int> get_size() const noexcept; // width, height
 
         void set_point_size(GLfloat size);
+
+        GLFWkeyfun SetKeyCallback(GLFWkeyfun cbfun);
     };
 }

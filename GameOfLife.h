@@ -24,4 +24,6 @@ public:
     void randomize();
 
     void diagonals();
+
+    void bars();
 };

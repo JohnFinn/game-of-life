@@ -59,3 +59,12 @@ void GameOfLife::diagonals() {
         }
     }
 }
+
+
+void GameOfLife::bars() {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            cell(x, y) = x % 2 or y % 2;
+        }
+    }
+}

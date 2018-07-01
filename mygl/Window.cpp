@@ -52,4 +52,11 @@ namespace gl {
         use();
         glPointSize(size);
     }
+
+
+    GLFWkeyfun Window::SetKeyCallback(GLFWkeyfun cbfun) {
+        return glfwSetKeyCallback(window, cbfun);
+    }
+
+
 } // namespace gl
