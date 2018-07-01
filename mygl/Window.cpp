@@ -90,4 +90,9 @@ namespace gl {
         return glfwSetMouseButtonCallback(window, callback);
     }
 
+
+    void Window::SetMouseButtonCallback(Window::mouse_button_func_t callback) {
+        mouse_button_func = std::move(callback);
+    }
+
 } // namespace gl

@@ -76,6 +76,9 @@ public:
             else if (key == GLFW_KEY_N and action == GLFW_PRESS or action == GLFW_REPEAT)
                 step();
         });
+        window.SetMouseButtonCallback([&](int button, int action, int mods){
+            std::cout << button << ' ' << action << ' ' << mods << std::endl;
+        });
 //        window.S
         while (not window.should_close()){
             if (running)
