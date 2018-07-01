@@ -77,7 +77,8 @@ public:
                 step();
         });
         window.SetMouseButtonCallback([&](int button, int action, int mods){
-            std::cout << button << ' ' << action << ' ' << mods << std::endl;
+            auto&& [x, y] = window.get_relative_cursor_pos();
+            std::cout << button << ' ' << action << ' ' << mods <<  ' ' << x << ' ' << y << std::endl;
         });
 //        window.S
         while (not window.should_close()){

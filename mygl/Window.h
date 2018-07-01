@@ -52,5 +52,11 @@ namespace gl {
         GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun callback);
 
         void SetMouseButtonCallback(mouse_button_func_t callback);
+
+        void get_cursor_pos(double &xpos, double &ypos) const;
+
+        std::pair<double, double> get_cursor_pos() const;
+
+        std::pair<double, double> get_relative_cursor_pos() const; // 0, 0 is center, -1,-1 left lower corner, etc.
     };
 }

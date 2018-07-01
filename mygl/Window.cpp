@@ -95,4 +95,25 @@ namespace gl {
         mouse_button_func = std::move(callback);
     }
 
+
+    void Window::get_cursor_pos(double &xpos, double &ypos) const {
+        glfwGetCursorPos(window, &xpos, &ypos);
+    }
+
+
+    std::pair<double, double> Window::get_cursor_pos() const {
+        double xpos, ypos;
+        get_cursor_pos(xpos, ypos);
+        return {xpos, ypos};
+    }
+
+    std::pair<double, double> Window::get_relative_cursor_pos() const {
+        int height, width;
+        double x, y;
+        get_size(width, height);
+        get_cursor_pos(x, y);
+        // x / width = ? / 2  |==> ? = 2x/width
+        return {2*x/width - 1, 1 - 2*y/height};
+    }
+
 } // namespace gl
