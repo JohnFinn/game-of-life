@@ -27,13 +27,11 @@ public:
             program(gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl"))
     {
 
-        // glider
-        int x = 10, y = 50;
-        game.cell(x, y) = 1;
-        game.cell(x+1,y) = 1;
-        game.cell(x+2,y) = 1;
-        game.cell(x+2,y+1) = 1;
-        game.cell(x+1,y+2) = 1;
+        glider(10, 50);
+        glider(10, 40);
+        glider(20, 50);
+        glider(20, 40);
+
 
         GLfloat relative_x_cell_size = 2.0f/wcount,
                 relative_y_cell_size = 2.0f/hcount;
@@ -87,6 +85,18 @@ public:
 //            sleep(1);
         }
     }
+
+
+    void glider(unsigned int x, unsigned int y){ // TODO implement flight direction
+        if (x == 0 or x + 1 >= wcount or y == 0 or y + 1 >= hcount)
+            throw std::logic_error("impossible to create glider here");
+        game.cell(x, y) = 1;
+        game.cell(x+1,y) = 1;
+        game.cell(x+2,y) = 1;
+        game.cell(x+2,y+1) = 1;
+        game.cell(x+1,y+2) = 1;
+    }
+
 
     void randomize(){
         for (unsigned int y = 0; y < hcount; ++y)
