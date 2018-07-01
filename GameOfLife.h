@@ -20,11 +20,4 @@ public:
     void update_cell(unsigned int x, unsigned int y);
 
     uint8_t count_around(unsigned int x, unsigned int y);
-
-    void randomize();
-
-    void diagonals();
-
-    void bars();
-
 };
