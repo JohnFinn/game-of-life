@@ -120,7 +120,7 @@ public:
     void step(){
         game.step();
         draw();
-        glfwPollEvents(); // TODO incapsulate it in gl::Window
+        glfwPollEvents();
     }
 
 
@@ -136,13 +136,20 @@ public:
                 step();
         });
         window.SetMouseButtonCallback([&](int button, int action, int mods){
-            if (action == GLFW_PRESS) {
-                auto&&[x, y] = get_cursor_cell_coords();
-                game.cell(x, y) = not game.cell(x, y);
-                vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
-                copy_vao();
-                draw_vao();
-                std::cout << button << ' ' << action << ' ' << mods <<  ' ' << x << ' ' << y << std::endl;
+            auto&&[x, y] = get_cursor_cell_coords();
+            if (button == GLFW_MOUSE_BUTTON_1 and action == GLFW_PRESS) {
+                invert_cell(x, y);
+            } else if (button == GLFW_MOUSE_BUTTON_2 and action == GLFW_PRESS){
+                bool caught = false;
+                try {
+                    glider(x, y);
+                } catch (std::logic_error& err){
+                    caught = true;
+                }
+                if (not caught) {
+                    copy_vao();
+                    draw_vao();
+                }
             }
         });
 
@@ -151,7 +158,6 @@ public:
                 step();
             else
                 glfwPollEvents();
-//            sleep(1);
         }
     }
 
@@ -162,6 +168,13 @@ public:
         y = hcount - y / cell_size;
         return {x, y};
     };
+
+
+    void invert_cell(unsigned int x, unsigned int y){
+        vertices[y][x][2] = game.cell(x, y) = not game.cell(x, y);
+        copy_vao();
+        draw_vao();
+    }
 
 
     void glider(unsigned int x, unsigned int y){ // TODO implement flight direction
@@ -194,7 +207,7 @@ public:
 
 
 int main(){
-    Game<100, 80> g(10);
+    Game<100, 80> g(10); // too large template parameters will lead to segfault if allocating on stack but not on heap
     g.glider(10, 50);
     g.glider(10, 40);
     g.glider(20, 50);
