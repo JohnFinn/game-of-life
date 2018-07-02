@@ -5,13 +5,52 @@
 #include <unistd.h>
 #include <unitypes.h>
 
+
+class MyGameOfLife : public GameOfLife {
+public:
+    using GameOfLife::GameOfLife;
+
+    void glider(unsigned int x, unsigned int y){ // TODO implement flight direction
+        if (x == 0 or x + 1 >= width or y == 0 or y + 1 >= height)
+            throw std::logic_error("impossible to create glider here");
+        cell(x, y) = 1;
+        cell(x+1,y) = 1;
+        cell(x+2,y) = 1;
+        cell(x+2,y+1) = 1;
+        cell(x+1,y+2) = 1;
+    }
+
+
+    void randomize(){
+        for (unsigned int y = 0; y < height; ++y)
+            for (unsigned int x = 0; x < width; ++x)
+                cell(x, y) = static_cast<uint8_t>(std::rand() % 2);
+    }
+
+
+    void diagonals() {
+        for (unsigned int y = 0; y < height; ++y)
+            for (unsigned int x = 0; x < width; ++x)
+                cell(x, y) = static_cast<uint8_t>(x % 2 xor y % 2);
+    }
+
+
+    void bars() {
+        for (unsigned int y = 0; y < height; ++y)
+            for (unsigned int x = 0; x < width; ++x)
+                cell(x, y) = static_cast<uint8_t>(x % 2 or y % 2);
+    }
+
+};
+
+
 template <unsigned int wcount = 80, unsigned int hcount = 60>
 class Game{
 public:
     // order is important !
     gl::Library lib;        // has to be first (calls glwfinit in constructor and glfwterminate in destructor)
     gl::Window window;      // calls glewinit and also I need to be able to call window.use() before constructing vao and program
-    GameOfLife game;        // use comma operator to call window.use()
+    MyGameOfLife game;      // use comma operator to call window.use()
     gl::VertexArray vao;    // needs opengl context which window.use() does
     gl::Program program;    // same as vao
 
@@ -30,11 +69,6 @@ public:
             program(gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl"))
     {
 
-        glider(10, 50);
-        glider(10, 40);
-        glider(20, 50);
-        glider(20, 40);
-
         // cells should be displayed as squares
         // here we calculate height and width in interval -1, 1 in order not to allow overlapping
         GLfloat relative_x_cell_size = 2.0f/wcount,
@@ -45,8 +79,8 @@ public:
                 y_start = relative_y_cell_size/2 - 1;
 
         // initial values of vertices
-        for (uint y = 0; y < hcount; ++y) {
-            for (uint x = 0; x < wcount; ++x) {
+        for (unsigned int y = 0; y < hcount; ++y) {
+            for (unsigned int x = 0; x < wcount; ++x) {
                 vertices[y][x][0] = x_start + x * relative_x_cell_size;
                 vertices[y][x][1] = y_start + y * relative_y_cell_size;
                 vertices[y][x][2] = static_cast <float> (game.cell(x, y));
@@ -55,6 +89,13 @@ public:
         vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
         program.use();
         window.set_point_size(cell_size);
+    }
+
+
+    void copy_cells(){
+        for (unsigned int y = 0; y < hcount; ++y)
+            for (unsigned int x = 0; x < wcount; ++x)
+                vertices[y][x][2] = static_cast <float> (game.cell(x, y));
     }
 
 
@@ -123,41 +164,45 @@ public:
 
 
     void glider(unsigned int x, unsigned int y){ // TODO implement flight direction
-        if (x == 0 or x + 1 >= wcount or y == 0 or y + 1 >= hcount)
-            throw std::logic_error("impossible to create glider here");
-        game.cell(x, y) = 1;
-        game.cell(x+1,y) = 1;
-        game.cell(x+2,y) = 1;
-        game.cell(x+2,y+1) = 1;
-        game.cell(x+1,y+2) = 1;
+        game.glider(x, y);
+        copy_cells();
+        copy_vao();
+        draw();
     }
 
 
     void randomize(){
-        for (unsigned int y = 0; y < hcount; ++y)
-            for (unsigned int x = 0; x < wcount; ++x)
-                game.cell(x, y) = static_cast<uint8_t>(std::rand() % 2);
+        game.randomize();
+        copy_cells();
+        copy_vao();
+        draw();
     }
 
 
     void diagonals() {
-        for (unsigned int y = 0; y < hcount; ++y)
-            for (unsigned int x = 0; x < wcount; ++x)
-                game.cell(x, y) = static_cast<uint8_t>(x % 2 xor y % 2);
+        game.diagonals();
+        copy_cells();
+        copy_vao();
+        draw();
     }
 
 
     void bars() {
-        for (unsigned int y = 0; y < hcount; ++y)
-            for (unsigned int x = 0; x < wcount; ++x)
-                game.cell(x, y) = static_cast<uint8_t>(x % 2 or y % 2);
+        game.bars();
+        copy_cells();
+        copy_vao();
+        draw();
     }
 };
 
 
 int main(){
-        Game<100, 80> g(10);
-        g.play();
+    Game<100, 80> g(10);
+    g.glider(10, 50);
+    g.glider(10, 40);
+    g.glider(20, 50);
+    g.glider(20, 40);
+    g.play();
 
     return 0;
 }
