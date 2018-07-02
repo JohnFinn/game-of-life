@@ -112,9 +112,7 @@ public:
 
     void step(){
         game.step();
-        for (unsigned int y = 0; y < hcount; ++y)
-            for (unsigned int x = 0; x < wcount; ++x)
-                vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
+        copy_cells();
         copy_vao();
 
 
