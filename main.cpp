@@ -104,26 +104,29 @@ public:
     }
 
 
-    void draw(){
+    void draw_vao(){
         vao.draw(GL_POINTS, 0, hcount * wcount);
         window.swap_buffers();
     }
 
 
-    void step(){
-        game.step();
+    void draw(){
         copy_cells();
         copy_vao();
+        draw_vao();
+    }
 
 
-        glfwPollEvents(); // TODO incapsulate it in gl::Window
+    void step(){
+        game.step();
         draw();
+        glfwPollEvents(); // TODO incapsulate it in gl::Window
     }
 
 
     void play(){
         copy_vao();
-        draw();
+        draw_vao();
         bool running = false;
         window.SetKeyCallback([&](int key, int scancode, int action, int mods){
 //            std::cout << window << ' ' << key << ' ' << scancode << ' ' << action << ' ' << mods << std::endl;
@@ -138,7 +141,7 @@ public:
                 game.cell(x, y) = not game.cell(x, y);
                 vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
                 copy_vao();
-                draw();
+                draw_vao();
                 std::cout << button << ' ' << action << ' ' << mods <<  ' ' << x << ' ' << y << std::endl;
             }
         });
@@ -167,30 +170,24 @@ public:
             for (unsigned int X = x; X <= x+2; ++X)
                 vertices[Y][X][2] = static_cast <float> (game.cell(X, Y));
         copy_vao();
-        draw();
+        draw_vao();
     }
 
 
     void randomize(){
         game.randomize();
-        copy_cells();
-        copy_vao();
         draw();
     }
 
 
     void diagonals() {
         game.diagonals();
-        copy_cells();
-        copy_vao();
         draw();
     }
 
 
     void bars() {
         game.bars();
-        copy_cells();
-        copy_vao();
         draw();
     }
 };
