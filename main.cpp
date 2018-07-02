@@ -44,6 +44,7 @@ public:
         GLfloat x_start = relative_x_cell_size/2 - 1,
                 y_start = relative_y_cell_size/2 - 1;
 
+        // initial values of vertices
         for (uint y = 0; y < hcount; ++y) {
             for (uint x = 0; x < wcount; ++x) {
                 vertices[y][x][0] = x_start + x * relative_x_cell_size;
@@ -51,22 +52,28 @@ public:
                 vertices[y][x][2] = static_cast <float> (game.cell(x, y));
             }
         }
-        vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
         vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
         program.use();
         window.set_point_size(cell_size);
     }
 
 
-    void step(){
+    void draw(){
         vao.draw(GL_POINTS, 0, hcount * wcount);
-        glfwPollEvents(); // TODO incapsulate it in gl::Window
         window.swap_buffers();
+    }
+
+
+    void step(){
         game.step();
         for (unsigned int y = 0; y < hcount; ++y)
             for (unsigned int x = 0; x < wcount; ++x)
                 vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
         vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+
+
+        glfwPollEvents(); // TODO incapsulate it in gl::Window
+        draw();
     }
 
 
