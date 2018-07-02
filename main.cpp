@@ -58,6 +58,11 @@ public:
     }
 
 
+    void copy_vao(){
+        vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+    }
+
+
     void draw(){
         vao.draw(GL_POINTS, 0, hcount * wcount);
         window.swap_buffers();
@@ -69,7 +74,7 @@ public:
         for (unsigned int y = 0; y < hcount; ++y)
             for (unsigned int x = 0; x < wcount; ++x)
                 vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
-        vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+        copy_vao();
 
 
         glfwPollEvents(); // TODO incapsulate it in gl::Window
@@ -78,6 +83,8 @@ public:
 
 
     void play(){
+        copy_vao();
+        draw();
         bool running = false;
         window.SetKeyCallback([&](int key, int scancode, int action, int mods){
 //            std::cout << window << ' ' << key << ' ' << scancode << ' ' << action << ' ' << mods << std::endl;
@@ -91,13 +98,12 @@ public:
                 auto&&[x, y] = get_cursor_cell_coords();
                 game.cell(x, y) = not game.cell(x, y);
                 vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
-                vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-                vao.draw(GL_POINTS, 0, hcount * wcount);
-                window.swap_buffers();
+                copy_vao();
+                draw();
                 std::cout << button << ' ' << action << ' ' << mods <<  ' ' << x << ' ' << y << std::endl;
             }
         });
-//        window.S
+
         while (not window.should_close()){
             if (running)
                 step();
