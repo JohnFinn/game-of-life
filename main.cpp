@@ -17,11 +17,14 @@ public:
 
     GLfloat vertices[hcount][wcount][3];
 
+    unsigned int cell_size = 1;
+
 
     Game() : Game(10) {}
 
 
     explicit Game(unsigned int cell_size) :
+            cell_size(cell_size),
             window(cell_size * wcount, cell_size * hcount, "Game of life"),
             game(wcount, (window.use(), hcount)),
             program(gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl"))
@@ -77,8 +80,15 @@ public:
                 step();
         });
         window.SetMouseButtonCallback([&](int button, int action, int mods){
-            auto&& [x, y] = window.get_relative_cursor_pos();
-            std::cout << button << ' ' << action << ' ' << mods <<  ' ' << x << ' ' << y << std::endl;
+            if (action == GLFW_PRESS) {
+                auto&&[x, y] = get_cursor_cell_coords();
+                game.cell(x, y) = not game.cell(x, y);
+                vertices[y][x][2] = static_cast <GLfloat> (game.cell(x, y));
+                vao.copy(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+                vao.draw(GL_POINTS, 0, hcount * wcount);
+                window.swap_buffers();
+                std::cout << button << ' ' << action << ' ' << mods <<  ' ' << x << ' ' << y << std::endl;
+            }
         });
 //        window.S
         while (not window.should_close()){
@@ -89,6 +99,14 @@ public:
 //            sleep(1);
         }
     }
+
+
+    std::pair<unsigned int, unsigned int> get_cursor_cell_coords(){ // coordinates in game
+        auto&& [x, y] = window.get_cursor_pos();
+        x /= cell_size;
+        y = hcount - y / cell_size;
+        return {x, y};
+    };
 
 
     void glider(unsigned int x, unsigned int y){ // TODO implement flight direction
