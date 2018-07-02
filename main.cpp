@@ -165,7 +165,9 @@ public:
 
     void glider(unsigned int x, unsigned int y){ // TODO implement flight direction
         game.glider(x, y);
-        copy_cells();
+        for (unsigned int Y = y; Y <= y+2; ++Y)
+            for (unsigned int X = x; X <= x+2; ++X)
+                vertices[Y][X][2] = static_cast <float> (game.cell(X, Y));
         copy_vao();
         draw();
     }
