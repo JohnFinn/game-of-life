@@ -1,6 +1,6 @@
 #include "Shader.h"
 namespace gl {
-    Shader::Shader(GLenum type, const char *source) : Shader(type) {
+    Shader::Shader(GLenum type, const std::string_view source) : Shader(type) {
         setSource(source);
         compile();
     }
@@ -12,8 +12,10 @@ namespace gl {
     }
 
 
-    void Shader::setSource(const char *src) {
-        GLCALL(glShaderSource(id, 1, &src, nullptr);)
+    void Shader::setSource(const std::string_view src) {
+        auto ptr = src.cbegin();
+        auto size = static_cast<GLint>(src.size());
+        GLCALL(glShaderSource(id, 1, &ptr, &size);)
     }
 
     void Shader::compile() {

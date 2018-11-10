@@ -4,10 +4,9 @@
 namespace gl {
 
 
-    Program Program::fromString(const char *vert, const char *frag) {
+    Program Program::fromString(const std::string_view vert, const std::string_view frag) {
         return Program(Shader(GL_VERTEX_SHADER, vert), Shader(GL_FRAGMENT_SHADER, frag));
     }
-
 
     Program Program::fromFiles(const std::string &vertFname, const std::string &fragFname) {
         std::ifstream t(vertFname);
@@ -17,9 +16,12 @@ namespace gl {
         t = std::ifstream(fragFname);
         std::string fshader((std::istreambuf_iterator<char>(t)),
                             std::istreambuf_iterator<char>());
-        return Program::fromString(vshader.c_str(), fshader.c_str());
+        return Program::fromString(vshader, fshader);
     }
 
+    Program Program::fromFiles(std::string&& vertFname, std::string&& fragFname) {
+        return fromFiles(vertFname, fragFname);
+    }
 
     Program::Program(Shader&& vs, Shader &&fs):
     id (glCreateProgram()){

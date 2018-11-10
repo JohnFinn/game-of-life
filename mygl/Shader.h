@@ -11,7 +11,7 @@ namespace gl {
 
         GLuint id;
     public:
-        Shader(GLenum type, const char *source);
+        Shader(GLenum type, const std::string_view);
 
         Shader(Shader&& other) noexcept;
 
@@ -21,7 +21,7 @@ namespace gl {
 
         ~Shader();
 
-        void setSource(const char *src);
+        void setSource(const std::string_view);
 
         void compile();
 
