@@ -8,19 +8,15 @@ namespace gl {
         return Program(Shader(GL_VERTEX_SHADER, vert), Shader(GL_FRAGMENT_SHADER, frag));
     }
 
-    Program Program::fromFiles(const std::string &vertFname, const std::string &fragFname) {
-        std::ifstream t(vertFname);
+    Program Program::fromFiles(const std::string_view vertFname, const std::string_view fragFname) {
+        std::ifstream t(vertFname.data());
         std::string vshader((std::istreambuf_iterator<char>(t)),
                             std::istreambuf_iterator<char>());
 
-        t = std::ifstream(fragFname);
+        t = std::ifstream(fragFname.data());
         std::string fshader((std::istreambuf_iterator<char>(t)),
                             std::istreambuf_iterator<char>());
         return Program::fromString(vshader, fshader);
-    }
-
-    Program Program::fromFiles(std::string&& vertFname, std::string&& fragFname) {
-        return fromFiles(vertFname, fragFname);
     }
 
     Program::Program(Shader&& vs, Shader &&fs):

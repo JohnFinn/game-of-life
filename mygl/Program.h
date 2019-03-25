@@ -15,9 +15,7 @@ namespace gl {
     public:
         static Program fromString(const std::string_view vert, const std::string_view frag);
 
-        static Program fromFiles(const std::string& vertFname, const std::string& fragFname);
-
-        static Program fromFiles(std::string&& vertFname, std::string&& fragFname);
+        static Program fromFiles(const std::string_view vertFname, const std::string_view fragFname);
 
         Program(Shader &&vs, Shader &&fs);
 
