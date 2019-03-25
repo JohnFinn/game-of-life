@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstring>
-#include "mygl/mygl.h"
-#include "GameOfLife/GameOfLife.h"
+#include "../mygl/mygl.h"
+#include "../GameOfLife/GameOfLife.h"
 #include "GameOfLifeExtensions.h"
 
 class GameOfLifeExtensions : public GameOfLife {

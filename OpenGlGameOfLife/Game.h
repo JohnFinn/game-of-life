@@ -1,9 +1,9 @@
 #pragma once
 
 #include "GameOfLifeExtensions.h"
-#include "Array3D.h"
-#include "mygl/mygl.h"
-#include "GameOfLife/GameOfLife.h"
+#include "../Array3D.h"
+#include "../mygl/mygl.h"
+#include "../GameOfLife/GameOfLife.h"
 #include "Game.h"
 
 

@@ -1,5 +1,5 @@
 
-#include "Game.h"
+#include "OpenGlGameOfLife/Game.h"
 
 
 int main(){
