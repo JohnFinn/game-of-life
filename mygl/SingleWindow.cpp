@@ -26,6 +26,9 @@ namespace gl {
             throw std::runtime_error("Window or context creation failed");
         SetKeyCallback(keyCallback);
         SetMouseButtonCallback(mouse_button_callback);
+        glfwMakeContextCurrent(window);
+        if (GLenum err = glewInit())
+            throw std::runtime_error("Failed to initialize GLEW " + std::to_string(err));
     }
 
     SingleWindow::SingleWindow(unsigned int w, unsigned int h, char *title) : SingleWindow(w, h, title, nullptr, nullptr) {}
@@ -33,14 +36,6 @@ namespace gl {
     SingleWindow::~SingleWindow() {
         glfwDestroyWindow(window);
     }
-
-
-    void SingleWindow::use() const {
-        glfwMakeContextCurrent(window);
-        if (GLenum err = glewInit())
-            throw std::runtime_error("Failed to initialize GLEW " + std::to_string(err));
-    }
-
 
     int SingleWindow::should_close() const {
         return glfwWindowShouldClose(window);
@@ -52,7 +47,7 @@ namespace gl {
     }
 
 
-    std::pair<int, int> SingleWindow::get_size() const noexcept{
+    std::pair<int, int> SingleWindow::get_size() const noexcept {
         int width, height;
         get_size(width, height);
         return {width, height};
@@ -63,17 +58,9 @@ namespace gl {
         glfwGetWindowSize(window , &width, &height);
     }
 
-
-    void SingleWindow::set_point_size(GLfloat size) {
-        use();
-        glPointSize(size);
-    }
-
-
     GLFWkeyfun SingleWindow::SetKeyCallback(GLFWkeyfun callback) {
         return glfwSetKeyCallback(window, callback);
     }
-
 
     void SingleWindow::SetKeyCallback(SingleWindow::keyfunc_t callback) {
         keyfunc = std::move(callback);
@@ -83,16 +70,13 @@ namespace gl {
         return glfwSetMouseButtonCallback(window, callback);
     }
 
-
     void SingleWindow::SetMouseButtonCallback(SingleWindow::mouse_button_func_t callback) {
         mouse_button_func = std::move(callback);
     }
 
-
     void SingleWindow::get_cursor_pos(double &xpos, double &ypos) const {
         glfwGetCursorPos(window, &xpos, &ypos);
     }
-
 
     std::pair<double, double> SingleWindow::get_cursor_pos() const {
         double xpos, ypos;

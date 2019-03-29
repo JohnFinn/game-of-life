@@ -34,8 +34,6 @@ namespace gl {
 
         ~SingleWindow();
 
-        void use() const;
-
         int should_close() const;
 
         void swap_buffers();
@@ -43,8 +41,6 @@ namespace gl {
         void get_size(int& height, int& width) const noexcept;
 
         std::pair<int, int> get_size() const noexcept; // width, height
-
-        void set_point_size(GLfloat size);
 
         GLFWkeyfun SetKeyCallback(GLFWkeyfun callback);
 

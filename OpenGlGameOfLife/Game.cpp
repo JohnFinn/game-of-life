@@ -6,7 +6,7 @@ Game::Game(unsigned int width, unsigned int height, unsigned int cell_size) :
         vertices(width, height, 3),
         cell_size(cell_size),
         window(gl::SingleWindow::createInstance(cell_size * width, cell_size * height, "Game of life")),
-        game(width, (window.use(), height)),
+        game(width, height),
         program(gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl"))
 {
 
@@ -28,7 +28,7 @@ Game::Game(unsigned int width, unsigned int height, unsigned int cell_size) :
     }
     vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
     program.use();
-    window.set_point_size(cell_size);
+    glPointSize(cell_size);
 }
 
 void Game::copy_cells() {
