@@ -12,7 +12,7 @@ public:
     size_t width, height;
     // order is important !
     gl::Library lib;        // has to be first (calls glwfinit in constructor and glfwterminate in destructor)
-    gl::Window window;      // calls glewinit and also I need to be able to call window.use() before constructing vao and program
+    gl::SingleWindow& window;      // calls glewinit and also I need to be able to call window.use() before constructing vao and program
     GameOfLifeExtensions game;      // use comma operator to call window.use()
     gl::VertexArray vao;    // needs opengl context which window.use() does
     gl::Program program;    // same as vao

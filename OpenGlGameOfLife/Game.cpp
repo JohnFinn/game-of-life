@@ -5,7 +5,7 @@ Game::Game(unsigned int width, unsigned int height, unsigned int cell_size) :
         height(height),
         vertices(width, height, 3),
         cell_size(cell_size),
-        window(cell_size * width, cell_size * height, "Game of life"),
+        window(gl::SingleWindow::createInstance(cell_size * width, cell_size * height, "Game of life")),
         game(width, (window.use(), height)),
         program(gl::Program::fromFiles("../shaders/vertex.glsl", "../shaders/fragment.glsl"))
 {

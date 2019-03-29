@@ -8,30 +8,31 @@
 
 namespace gl {
 
-    class Window {
+    class SingleWindow {
     private:
-
-
         typedef std::function<void(int, int, int, int)> keyfunc_t;
         typedef std::function<void(int, int, int)> mouse_button_func_t;
 
         GLFWwindow *window = nullptr;
 
-        static std::map<GLFWwindow*, Window*> windows;
+        SingleWindow(unsigned int w, unsigned int h, char *title, GLFWmonitor *monitor, GLFWwindow *share);
+
+        SingleWindow(unsigned int w, unsigned int h, char *title);
 
     public:
+        SingleWindow(SingleWindow const&)  = delete;
+
+        void operator=(SingleWindow const&) = delete;
+
+        static SingleWindow& createInstance(unsigned int w, unsigned int h, char *title);
+
+        static SingleWindow& getInstance();
 
         keyfunc_t keyfunc;
 
         mouse_button_func_t mouse_button_func;
 
-        static Window* get(GLFWwindow* window);
-
-        Window(unsigned int w, unsigned int h, char *title, GLFWmonitor *monitor, GLFWwindow *share);
-
-        Window(unsigned int w, unsigned int h, char *title);
-
-        ~Window();
+        ~SingleWindow();
 
         void use() const;
 
