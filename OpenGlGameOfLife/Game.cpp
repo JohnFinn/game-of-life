@@ -69,6 +69,9 @@ void Game::play() {
         else if (key == GLFW_KEY_N and action == GLFW_PRESS or action == GLFW_REPEAT)
             step();
     });
+    window.SetWindowSizeCallback([](int width, int height) {
+        std::cout << "window resized to " << width << "x" << height << std::endl;
+    });
     window.SetMouseButtonCallback([&](int button, int action, int mods){
         auto&&[x, y] = get_cursor_cell_coords();
         if (button == GLFW_MOUSE_BUTTON_1 and action == GLFW_PRESS) {

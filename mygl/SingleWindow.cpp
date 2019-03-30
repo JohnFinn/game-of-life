@@ -11,6 +11,10 @@ namespace gl {
         SingleWindow::getInstance().mouse_button_func(button, action, mods);
     }
 
+    void window_size_callback(GLFWwindow* window, int width, int height) {
+        SingleWindow::getInstance().size_callback(width, height);
+    }
+
     SingleWindow& SingleWindow::createInstance(unsigned int w, unsigned int h, char *title) {
         static SingleWindow window(w, h, title);
         return window;
@@ -26,6 +30,7 @@ namespace gl {
             throw std::runtime_error("Window or context creation failed");
         SetKeyCallback(keyCallback);
         SetMouseButtonCallback(mouse_button_callback);
+        glfwSetWindowSizeCallback(window, window_size_callback);
         glfwMakeContextCurrent(window);
         if (GLenum err = glewInit())
             throw std::runtime_error("Failed to initialize GLEW " + std::to_string(err));
@@ -73,6 +78,11 @@ namespace gl {
     void SingleWindow::SetMouseButtonCallback(SingleWindow::mouse_button_func_t callback) {
         mouse_button_func = std::move(callback);
     }
+
+    void SingleWindow::SetWindowSizeCallback(SingleWindow::size_func_t callback) {
+        size_callback = callback;
+    }
+
 
     void SingleWindow::get_cursor_pos(double &xpos, double &ypos) const {
         glfwGetCursorPos(window, &xpos, &ypos);

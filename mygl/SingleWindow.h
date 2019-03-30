@@ -12,6 +12,7 @@ namespace gl {
     private:
         typedef std::function<void(int, int, int, int)> keyfunc_t;
         typedef std::function<void(int, int, int)> mouse_button_func_t;
+        typedef std::function<void(int, int)> size_func_t;
 
         GLFWwindow *window = nullptr;
 
@@ -32,6 +33,8 @@ namespace gl {
 
         mouse_button_func_t mouse_button_func;
 
+        size_func_t size_callback;
+
         ~SingleWindow();
 
         int should_close() const;
@@ -49,6 +52,8 @@ namespace gl {
         GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun callback);
 
         void SetMouseButtonCallback(mouse_button_func_t callback);
+
+        void SetWindowSizeCallback(size_func_t callback);
 
         void get_cursor_pos(double &xpos, double &ypos) const;
 
