@@ -1,19 +1,19 @@
 #include "glcall.h"
 #include <algorithm>
 
-glErrors::iterator::iterator(int){
+glErrors::iterator::iterator(int) {
     error = GL_NO_ERROR;
 }
 
-glErrors::iterator::iterator(){
+glErrors::iterator::iterator() {
     error = glGetError();
 }
 
-glErrors::iterator& glErrors::iterator::operator++(){
+glErrors::iterator &glErrors::iterator::operator++() {
     error = glGetError();
 }
 
-glErrors::iterator glErrors::iterator::operator++(int){
+const glErrors::iterator glErrors::iterator::operator++(int) {
     iterator copy(*this);
     operator++();
     return copy;
@@ -23,11 +23,11 @@ GLenum glErrors::iterator::operator*() {
     return error;
 }
 
-bool glErrors::iterator::operator==(const iterator& other) {
+bool glErrors::iterator::operator==(const iterator &other) {
     return error == other.error;
 }
 
-bool glErrors::iterator::operator!=(const iterator& other) {
+bool glErrors::iterator::operator!=(const iterator &other) {
     return error != other.error;
 }
 

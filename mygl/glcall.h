@@ -10,24 +10,22 @@
 
 class glErrors {
 public:
-    class iterator : std::iterator<std::input_iterator_tag, GLenum, ptrdiff_t, GLenum*, GLenum&> {
+    class iterator : std::iterator<std::input_iterator_tag, GLenum, ptrdiff_t, GLenum *, GLenum &> {
         GLenum error;
     public:
-        // for end iterator
-        iterator(int);
+        explicit iterator(int);                     // for end iterator
         iterator();
-        iterator& operator++();
-        iterator operator++(int);
+        iterator &operator++();
+        const iterator operator++(int);
         GLenum operator*();
-        GLenum* operator->();
-        bool operator==(const iterator& other);
-        bool operator!=(const iterator& other);
+        bool operator==(const iterator &other);
+        bool operator!=(const iterator &other);
     };
     iterator begin();
     iterator end();
 };
 
-template <>
+template<>
 struct ::std::iterator_traits<glErrors::iterator> {
     typedef ptrdiff_t difference_type;
     typedef std::input_iterator_tag iterator_category;
