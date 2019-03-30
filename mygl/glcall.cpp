@@ -1,10 +1,49 @@
 #include "glcall.h"
+#include <algorithm>
+
+glErrors::iterator::iterator(int){
+    error = GL_NO_ERROR;
+}
+
+glErrors::iterator::iterator(){
+    error = glGetError();
+}
+
+glErrors::iterator& glErrors::iterator::operator++(){
+    error = glGetError();
+}
+
+glErrors::iterator glErrors::iterator::operator++(int){
+    iterator copy(*this);
+    operator++();
+    return copy;
+}
+
+GLenum glErrors::iterator::operator*() {
+    return error;
+}
+
+bool glErrors::iterator::operator==(const iterator& other) {
+    return error == other.error;
+}
+
+bool glErrors::iterator::operator!=(const iterator& other) {
+    return error != other.error;
+}
+
+glErrors::iterator glErrors::begin() {
+    return glErrors::iterator();
+}
+
+glErrors::iterator glErrors::end() {
+    return glErrors::iterator(0);
+}
+
 
 namespace gl {
     std::vector<GLenum> getErrors() {
-        std::vector<GLenum> result;
-        for (GLenum error = glGetError(); error != GL_NO_ERROR; error = glGetError())
-            result.push_back(error);
+        glErrors errors;
+        std::vector<GLenum> result(errors.begin(), errors.end());
         return result;
     }
 
