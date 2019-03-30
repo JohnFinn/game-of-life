@@ -47,6 +47,18 @@ namespace gl {
         return result;
     }
 
+    void handleErrors(std::string location) {
+        glErrors errors;
+        std::stringstream ss;
+        for (GLenum error: errors) {
+            ss << "[OpenGL error]" << gl::getErrorMessage(error) << '\n';
+        }
+        std::string s = ss.str();
+        if (not s.empty()) {
+            throw std::runtime_error(location + s);
+        }
+    }
+
     std::string getErrorMessage(GLenum errcode) {
         std::map<GLenum, std::string> values;
         values[GL_NO_ERROR] =                       "GL_NO_ERROR                        No error has been recorded. The value of this symbolic constant is guaranteed to be 0.";

@@ -35,15 +35,13 @@ namespace gl {
     std::vector<GLenum> getErrors();
 
     std::string getErrorMessage(GLenum errcode);
+
+    void handleErrors(std::string location);
 }
 
+#define S(x) #x
+#define S_(x) S(x)
+#define S__LINE__ S_(__LINE__)
+#define LOCATION std::string(__PRETTY_FUNCTION__) + " " __FILE__ ":" S__LINE__
 
-#define GLCALL(expr) gl::getErrors(); expr;\
-    {std::vector<GLenum> errors = gl::getErrors();\
-    if (!errors.empty()){\
-        std::stringstream ss;\
-        ss << "[OpenGL error] " << __FILE__ << ':' << __LINE__ <<'\n' << __FUNCTION__ << '\n';\
-        for (auto i : errors)\
-            ss << gl::getErrorMessage(i) << "\n";\
-        throw std::runtime_error(ss.str());\
-    }}
+#define GLCALL(expr) gl::handleErrors(""); expr; gl::handleErrors(LOCATION);
