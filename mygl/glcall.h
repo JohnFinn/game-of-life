@@ -38,7 +38,7 @@ namespace gl {
 }
 
 
-#define GLCALL(expr) getErrors(); expr;\
+#define GLCALL(expr) gl::getErrors(); expr;\
     {std::vector<GLenum> errors = gl::getErrors();\
     if (!errors.empty()){\
         std::stringstream ss;\
