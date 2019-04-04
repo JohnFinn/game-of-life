@@ -26,7 +26,7 @@ public:
 };
 
 template<>
-struct ::std::iterator_traits<glErrors::iterator> {
+struct std::iterator_traits<glErrors::iterator> {
     typedef ptrdiff_t difference_type;
     typedef std::input_iterator_tag iterator_category;
 };
@@ -45,3 +45,4 @@ namespace gl {
 #define LOCATION std::string(__PRETTY_FUNCTION__) + " " __FILE__ ":" S__LINE__
 
 #define GLCALL(expr) gl::handleErrors(""); expr; gl::handleErrors(LOCATION);
+//#define GLCALL(expr) expr;
