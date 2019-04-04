@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameOfLifeExtensions.h"
-#include "../Array3D.h"
+#include "Array3D.h"
 #include "../mygl/mygl.h"
 #include "../GameOfLife/GameOfLife.h"
 #include "Game.h"
@@ -20,7 +20,7 @@ public:
     Array3D<GLfloat> vertices;
     unsigned int cell_size = 1;
 
-    explicit Game(unsigned int width, unsigned int height, unsigned int cell_size);
+    explicit Game(size_t width, size_t height, size_t cell_size);
 
     void copy_cells();
 

@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(unsigned int width, unsigned int height, unsigned int cell_size) :
+Game::Game(size_t width, size_t height, size_t cell_size) :
         width(width),
         height(height),
         vertices(width, height, 3),
