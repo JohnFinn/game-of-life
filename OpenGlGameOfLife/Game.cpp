@@ -29,6 +29,26 @@ Game::Game(size_t width, size_t height, size_t cell_size) :
     vao.set_layout(GL_ARRAY_BUFFER, {{3, GL_FLOAT, GL_FALSE}});
     program.use();
     glPointSize(cell_size);
+    window.SetWindowSizeCallback([](int width, int height) {
+        std::cout << "window resized to " << width << "x" << height << std::endl;
+    });
+    window.SetMouseButtonCallback([&](int button, int action, int mods){
+        auto&&[x, y] = get_cursor_cell_coords();
+        if (button == GLFW_MOUSE_BUTTON_1 and action == GLFW_PRESS) {
+            invert_cell(x, y);
+        } else if (button == GLFW_MOUSE_BUTTON_2 and action == GLFW_PRESS){
+            bool caught = false;
+            try {
+                glider(x, y);
+            } catch (std::logic_error& err){
+                caught = true;
+            }
+            if (not caught) {
+                copy_vao();
+                draw_vao();
+            }
+        }
+    });
 }
 
 void Game::copy_cells() {
@@ -69,27 +89,6 @@ void Game::play() {
         else if (key == GLFW_KEY_N and action == GLFW_PRESS or action == GLFW_REPEAT)
             step();
     });
-    window.SetWindowSizeCallback([](int width, int height) {
-        std::cout << "window resized to " << width << "x" << height << std::endl;
-    });
-    window.SetMouseButtonCallback([&](int button, int action, int mods){
-        auto&&[x, y] = get_cursor_cell_coords();
-        if (button == GLFW_MOUSE_BUTTON_1 and action == GLFW_PRESS) {
-            invert_cell(x, y);
-        } else if (button == GLFW_MOUSE_BUTTON_2 and action == GLFW_PRESS){
-            bool caught = false;
-            try {
-                glider(x, y);
-            } catch (std::logic_error& err){
-                caught = true;
-            }
-            if (not caught) {
-                copy_vao();
-                draw_vao();
-            }
-        }
-    });
-
     while (not window.should_close()){
         if (running)
             step();
