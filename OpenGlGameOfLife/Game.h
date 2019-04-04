@@ -22,8 +22,6 @@ public:
 
     explicit Game(size_t width, size_t height, size_t cell_size);
 
-    void copy_cells();
-
     void draw_vao();
 
     void draw();

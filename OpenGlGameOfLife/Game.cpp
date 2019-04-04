@@ -50,12 +50,6 @@ Game::Game(size_t width, size_t height, size_t cell_size) :
     });
 }
 
-void Game::copy_cells() {
-    for (unsigned int y = 0; y < height; ++y)
-        for (unsigned int x = 0; x < width; ++x)
-            vertices.set(y, x, 2, static_cast <float> (game.cell(x, y)));
-}
-
 void Game::draw_vao() {
     vao.copy(GL_ARRAY_BUFFER, vertices.len() * sizeof(GLfloat), vertices.data(), GL_STREAM_DRAW);
     vao.draw(GL_POINTS, 0, height * width);
@@ -63,7 +57,9 @@ void Game::draw_vao() {
 }
 
 void Game::draw() {
-    copy_cells();
+    for (unsigned int y = 0; y < height; ++y)
+        for (unsigned int x = 0; x < width; ++x)
+            vertices.set(y, x, 2, static_cast <float> (game.cell(x, y)));
     draw_vao();
 }
 
