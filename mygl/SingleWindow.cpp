@@ -1,17 +1,19 @@
+#include <utility>
+
 #include "SingleWindow.h"
 
 #include <stdexcept>
 
 namespace gl {
-    void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods){
+    static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods){
         SingleWindow::getInstance().keyfunc(key, scancode, action, mods);
     }
 
-    void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
         SingleWindow::getInstance().mouse_button_func(button, action, mods);
     }
 
-    void window_size_callback(GLFWwindow* window, int width, int height) {
+    static void windowSizeCallback(GLFWwindow *window, int width, int height) {
         SingleWindow::getInstance().size_callback(width, height);
     }
 
@@ -28,9 +30,9 @@ namespace gl {
             window(glfwCreateWindow(w, h, title, monitor, share)) {
         if (not window)
             throw std::runtime_error("Window or context creation failed");
-        SetKeyCallback(keyCallback);
-        SetMouseButtonCallback(mouse_button_callback);
-        glfwSetWindowSizeCallback(window, window_size_callback);
+        glfwSetKeyCallback(window, keyCallback);
+        glfwSetMouseButtonCallback(window, mouseButtonCallback);
+        glfwSetWindowSizeCallback(window, windowSizeCallback);
         glfwMakeContextCurrent(window);
         if (GLenum err = glewInit())
             throw std::runtime_error("Failed to initialize GLEW " + std::to_string(err));
@@ -46,11 +48,9 @@ namespace gl {
         return glfwWindowShouldClose(window);
     }
 
-
     void SingleWindow::swap_buffers() {
         glfwSwapBuffers(window);
     }
-
 
     std::pair<int, int> SingleWindow::get_size() const noexcept {
         int width, height;
@@ -58,21 +58,12 @@ namespace gl {
         return {width, height};
     }
 
-
     void SingleWindow::get_size(int& width, int& height) const noexcept {
         glfwGetWindowSize(window , &width, &height);
     }
 
-    GLFWkeyfun SingleWindow::SetKeyCallback(GLFWkeyfun callback) {
-        return glfwSetKeyCallback(window, callback);
-    }
-
     void SingleWindow::SetKeyCallback(SingleWindow::keyfunc_t callback) {
         keyfunc = std::move(callback);
-    }
-
-    GLFWmousebuttonfun SingleWindow::SetMouseButtonCallback(GLFWmousebuttonfun callback) {
-        return glfwSetMouseButtonCallback(window, callback);
     }
 
     void SingleWindow::SetMouseButtonCallback(SingleWindow::mouse_button_func_t callback) {
@@ -80,9 +71,8 @@ namespace gl {
     }
 
     void SingleWindow::SetWindowSizeCallback(SingleWindow::size_func_t callback) {
-        size_callback = callback;
+        size_callback = std::move(callback);
     }
-
 
     void SingleWindow::get_cursor_pos(double &xpos, double &ypos) const {
         glfwGetCursorPos(window, &xpos, &ypos);

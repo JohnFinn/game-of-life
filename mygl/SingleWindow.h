@@ -45,11 +45,7 @@ namespace gl {
 
         std::pair<int, int> get_size() const noexcept; // width, height
 
-        GLFWkeyfun SetKeyCallback(GLFWkeyfun callback);
-
         void SetKeyCallback(keyfunc_t callback);
-
-        GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun callback);
 
         void SetMouseButtonCallback(mouse_button_func_t callback);
 
