@@ -24,8 +24,6 @@ public:
 
     void copy_cells();
 
-    void copy_vao();
-
     void draw_vao();
 
     void draw();

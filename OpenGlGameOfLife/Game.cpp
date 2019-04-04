@@ -44,7 +44,6 @@ Game::Game(size_t width, size_t height, size_t cell_size) :
                 caught = true;
             }
             if (not caught) {
-                copy_vao();
                 draw_vao();
             }
         }
@@ -57,18 +56,14 @@ void Game::copy_cells() {
             vertices.set(y, x, 2, static_cast <float> (game.cell(x, y)));
 }
 
-void Game::copy_vao() {
-    vao.copy(GL_ARRAY_BUFFER, vertices.len() * sizeof(GLfloat), vertices.data(), GL_STREAM_DRAW);
-}
-
 void Game::draw_vao() {
+    vao.copy(GL_ARRAY_BUFFER, vertices.len() * sizeof(GLfloat), vertices.data(), GL_STREAM_DRAW);
     vao.draw(GL_POINTS, 0, height * width);
     window.swap_buffers();
 }
 
 void Game::draw() {
     copy_cells();
-    copy_vao();
     draw_vao();
 }
 
@@ -79,7 +74,6 @@ void Game::step() {
 }
 
 void Game::play() {
-    copy_vao();
     draw_vao();
     bool running = false;
     window.SetKeyCallback([&](int key, int scancode, int action, int mods){
@@ -106,7 +100,6 @@ std::pair<unsigned int, unsigned int> Game::get_cursor_cell_coords() { // coordi
 
 void Game::invert_cell(unsigned int x, unsigned int y) {
     vertices.set(y, x, 2, game.cell(x, y) = not game.cell(x, y));
-    copy_vao();
     draw_vao();
 }
 
@@ -115,7 +108,6 @@ void Game::glider(unsigned int x, unsigned int y) { // TODO implement flight dir
     for (unsigned int Y = y; Y <= y+2; ++Y)
         for (unsigned int X = x; X <= x+2; ++X)
             vertices.set(Y, X, 2, static_cast <float> (game.cell(X, Y)));
-    copy_vao();
     draw_vao();
 }
 
